@@ -1,6 +1,18 @@
 ### yii2(yiisoft/yii2-app-advanced) + apples add-on
 
 #### Installation guide
+1. set subelement `user` and `db` of components in  `backend/config/main-local.php`
+as in common/config/main-local.php
+2. Create DATABASE in your MySQL (PRIVILEGES is optionsl)
+```mysql
+CREATE DATABASE yii2_apples;
+CREATE USER 'yiiuser'@'localhost' IDENTIFIED BY 'strong_password';
+GRANT ALL PRIVILEGES ON yii2_apples.* TO 'yiiuser'@'localhost';
+FLUSH PRIVILEGES;
+```
+3. Check  via cli : `./yii help`
+4. Run migration: `./yii migrate`
+
 
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
