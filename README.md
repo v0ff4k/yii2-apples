@@ -1,7 +1,7 @@
 ### yii2(yiisoft/yii2-app-advanced) + apples add-on
 
 #### Installation guide
-1. set subelement `user` and `db` of components in  `backend/config/main-local.php`
+1. set sub element `user` and `db` of components in  `backend/config/main-local.php`
 as in common/config/main-local.php
 2. Create DATABASE in your MySQL (PRIVILEGES is optionsl)
 ```mysql
@@ -16,6 +16,7 @@ FLUSH PRIVILEGES;
 6. Run (if your project located in /var/www/html/yii2-apple): `cd /var/www/html/yii2-apple/backend/web` 
 `php8.1 -S 127.0.0.1:8080`
 open in browser `http://127.0.0.1:8080/apple/index` enjoy ;)
+7. Auth  as `admin` with `admin123`
 
 
 #### TODO

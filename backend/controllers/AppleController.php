@@ -10,7 +10,7 @@ use yii\filters\VerbFilter;
 /**
  * AppleController implements the custom actions for Apple model.
  */
-class AppleController extends Controller
+class AppleController extends BaseController
 {
     /**
      * @inheritDoc
