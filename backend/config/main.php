@@ -16,6 +16,13 @@ return [
         'request' => [
             'csrfParam' => '_csrf-backend',
         ],
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=yii2_apples',
+            'username' => 'root',
+            'password' => 'root',
+            'charset' => 'utf8',
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
