@@ -12,7 +12,7 @@ FLUSH PRIVILEGES;
 ```
 3. Check  via cli : `./yii help`
 4. Run migration: `./yii migrate`
-
+5. Run Apple test:  `./yii test/run`
 
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
