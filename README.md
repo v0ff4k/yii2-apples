@@ -13,7 +13,19 @@ FLUSH PRIVILEGES;
 3. Check  via cli : `./yii help`
 4. Run migration: `./yii migrate`
 5. Run Apple test:  `./yii test/run`
+6. Run (if your project located in /var/www/html/yii2-apple): `cd /var/www/html/yii2-apple/backend/web` 
+`php8.1 -S 127.0.0.1:8080`
+open in browser `http://127.0.0.1:8080/apple/index` enjoy ;)
 
+
+#### TODO
+1.    Ripe timer (JavaScript or on page refresh), Fall/Eaten animation (CSS)
+2.    Work with Exceptions (in controller — try/catch, show Yii::$app->session->setFlash('error', $e->getMessage()))
+3.    Form validation: % from 1 to (100 - eaten_percent)
+4.    API for SPA
+5.    Logging (who, when what did)
+
+---
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
