@@ -16,13 +16,6 @@ $this->title = 'Яблоки';
     <button type="submit" class="btn btn-primary">Сгенерировать яблоки</button>
 </form>
 
-<!-- Сообщения об ошибках -->
-<?php if (Yii::$app->session->hasFlash('error')): ?>
-    <div class="alert alert-danger">
-        <?= Yii::$app->session->getFlash('error') ?>
-    </div>
-<?php endif; ?>
-
 <!-- Список яблок -->
 <table class="table table-bordered">
     <thead>
