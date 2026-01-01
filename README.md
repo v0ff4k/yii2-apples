@@ -5,7 +5,7 @@
 as in common/config/main-local.php
 2. Create DATABASE in your MySQL (PRIVILEGES is optionsl)
 ```mysql
-CREATE DATABASE yii2_apples;
+CREATE DATABASE yii2_apples CHARACTER SET utf8 COLLATE utf8mb4_general_ci;;
 CREATE USER 'yiiuser'@'localhost' IDENTIFIED BY 'strong_password';
 GRANT ALL PRIVILEGES ON yii2_apples.* TO 'yiiuser'@'localhost';
 FLUSH PRIVILEGES;
@@ -17,7 +17,13 @@ FLUSH PRIVILEGES;
 `php8.1 -S 127.0.0.1:8080`
 open in browser `http://127.0.0.1:8080/apple/index` enjoy ;)
 7. Auth  as `admin` with `admin123`
+8. Frontend:  jQuery JavaScript Library v3.7.1 + Bootstrap v5.3.8 
 
+#### Tests
+1. Create **test** table: `CREATE DATABASE yii2_apples_test CHARACTER SET utf8 COLLATE utf8mb4_general_ci;`
+2. Set DB(dsn) config for Database `yii2_apples_test` in `common/config/test-local.php`
+3. Unit test: `vendor/bin/codecept run unit common/tests/unit/models/AppleTest.php`(because common has "correct" unit test)
+4. Testing : ` vendor/bin/codecept run unit common/tests/unit/models/AppleTest.php  -c common` "config" as common/codeconception.yml
 
 #### TODO
 1.    Ripe timer (JavaScript or on page refresh), Fall/Eaten animation (CSS)
@@ -50,40 +56,40 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 [![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
 [![build](https://github.com/yiisoft/yii2-app-advanced/workflows/build/badge.svg)](https://github.com/yiisoft/yii2-app-advanced/actions?query=workflow%3Abuild)
 
-DIRECTORY STRUCTURE
+DIRECTORY STRUCTURE(contains)
 -------------------
 
 ```
 common
-    config/              contains shared configurations
-    mail/                contains view files for e-mails
-    models/              contains model classes used in both backend and frontend
-    tests/               contains tests for common classes    
+    config/              shared configurations
+    mail/                view files for e-mails
+    models/              model classes used in both backend and frontend
+    tests/               tests for common classes    
 console
-    config/              contains console configurations
-    controllers/         contains console controllers (commands)
-    migrations/          contains database migrations
-    models/              contains console-specific model classes
-    runtime/             contains files generated during runtime
+    config/              console configurations
+    controllers/         console controllers (commands)
+    migrations/          database migrations
+    models/              console-specific model classes
+    runtime/             files generated during runtime
 backend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains backend configurations
-    controllers/         contains Web controller classes
-    models/              contains backend-specific model classes
-    runtime/             contains files generated during runtime
-    tests/               contains tests for backend application    
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
+    assets/              application assets such as JavaScript and CSS
+    config/              backend configurations
+    controllers/         Web controller classes
+    models/              backend-specific model classes
+    runtime/             files generated during runtime
+    tests/               tests for backend application    
+    views/               view files for the Web application
+    web/                 the entry script and Web resources
 frontend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains frontend configurations
-    controllers/         contains Web controller classes
-    models/              contains frontend-specific model classes
-    runtime/             contains files generated during runtime
-    tests/               contains tests for frontend application
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
-    widgets/             contains frontend widgets
-vendor/                  contains dependent 3rd-party packages
-environments/            contains environment-based overrides
+    assets/              application assets such as JavaScript and CSS
+    config/              frontend configurations
+    controllers/         Web controller classes
+    models/              frontend-specific model classes
+    runtime/             files generated during runtime
+    tests/               tests for frontend application
+    views/               view files for the Web application
+    web/                 the entry script and Web resources
+    widgets/             frontend widgets
+vendor/                  dependent 3rd-party packages
+environments/            environment-based overrides
 ```
