@@ -5,7 +5,7 @@
 as in common/config/main-local.php
 2. Create DATABASE in your MySQL (PRIVILEGES is optionsl)
 ```mysql
-CREATE DATABASE yii2_apples CHARACTER SET utf8 COLLATE utf8mb4_general_ci;;
+CREATE DATABASE yii2_apples CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 CREATE USER 'yiiuser'@'localhost' IDENTIFIED BY 'strong_password';
 GRANT ALL PRIVILEGES ON yii2_apples.* TO 'yiiuser'@'localhost';
 FLUSH PRIVILEGES;
