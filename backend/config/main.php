@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -11,17 +13,15 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'api' => [
+            'class' => \yii\rest\Module::class,
+            'controllerNamespace' => 'backend\controllers\api',
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
-        ],
-        'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=yii2_apples',
-            'username' => 'root',
-            'password' => 'root',
-            'charset' => 'utf8',
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -48,6 +48,13 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // API routes
+                'GET api/apple' => 'api/apple/index',
+                'POST api/apple' => 'api/apple/create',
+                'GET api/apple/<id:\d+>' => 'api/apple/view',
+                'POST api/apple/<id:\d+>/fall' => 'api/apple/fall',
+                'POST api/apple/<id:\d+>/eat' => 'api/apple/eat',
+                'DELETE api/apple/<id:\d+>' => 'api/apple/delete',
             ],
         ],
     ],

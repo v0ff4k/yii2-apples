@@ -1,43 +1,46 @@
 <?php
 
-namespace backend\models;
+declare(strict_types=1);
+
+namespace common\models;
 
 use DomainException;
 use InvalidArgumentException;
 use RuntimeException;
-use Yii;
 use yii\db\ActiveRecord;
 
 /**
- * Class Apple
- * @package common\models
+ * Class Apple.
+ *
+ * @property int|null $id
+ * @property string   $color
+ * @property int      $created_at
+ * @property int|null $fell_at
+ * @property float    $eaten_percent
  */
 class Apple extends ActiveRecord
 {
-    const STATUS_ON_TREE = 'on_tree';
-    const STATUS_ON_GROUND = 'on_ground';
-    const STATUS_ROTTEN = 'rotten';
+    public const STATUS_ON_TREE = 'on_tree';
 
-    /**
-     * @return string
-     */
-    public static function tableName()
+    public const STATUS_ON_GROUND = 'on_ground';
+
+    public const STATUS_ROTTEN = 'rotten';
+
+    public static function tableName(): string
     {
         return '{{%apple}}';
     }
 
     /**
-     * @return \common\models\Apple
-     * @throws \yii\db\Exception
+     * @throws RuntimeException
      */
-    public static function createRandom()
+    public static function createRandom(): self
     {
         $colors = ['red', 'green', 'yellow'];
 
         $apple = new self();
         $apple->color = $colors[array_rand($colors)];
-        // случайная дата за последние 24 часа
-        $apple->created_at = time() - mt_rand(0, 86400);
+        $apple->created_at = time() - random_int(0, 86400);
 
         if (!$apple->save()) {
             throw new RuntimeException('Не удалось создать яблоко');
@@ -46,10 +49,7 @@ class Apple extends ActiveRecord
         return $apple;
     }
 
-    /**
-     * @return array|array[]
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['color', 'created_at'], 'required'],
@@ -59,24 +59,17 @@ class Apple extends ActiveRecord
         ];
     }
 
-    /**
-     * @return bool
-     */
-    public function isRotten()
+    public function isRotten(): bool
     {
         return $this->getStatus() === self::STATUS_ROTTEN;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         if ($this->fell_at === null) {
             return self::STATUS_ON_TREE;
         }
 
-        // Проверка: прошло ли более 5 часов с момента падения
         if (time() - $this->fell_at > 5 * 3600) {
             return self::STATUS_ROTTEN;
         }
@@ -85,9 +78,9 @@ class Apple extends ActiveRecord
     }
 
     /**
-     * @throws \yii\db\Exception
+     * @throws RuntimeException
      */
-    public function fallToGround()
+    public function fallToGround(): void
     {
         if ($this->getStatus() !== self::STATUS_ON_TREE) {
             throw new DomainException('Яблоко уже не на дереве');
@@ -99,17 +92,17 @@ class Apple extends ActiveRecord
     }
 
     /**
-     * @param $percent
-     * @throws \Throwable
-     * @throws \yii\db\Exception
-     * @throws \yii\db\StaleObjectException
+     * @throws DomainException
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
-    public function eat($percent)
+    public function eat(float $percent): void
     {
         if (!$this->canEat()) {
             if ($this->getStatus() === self::STATUS_ON_TREE) {
                 throw new DomainException('Съесть нельзя, яблоко на дереве');
             }
+
             throw new DomainException('Яблоко испорчено, есть нельзя');
         }
 
@@ -131,10 +124,7 @@ class Apple extends ActiveRecord
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function canEat()
+    public function canEat(): bool
     {
         return $this->getStatus() === self::STATUS_ON_GROUND;
     }

@@ -1,0 +1,13 @@
+parameters:
+    level: 8
+    treatPhpDocTypesAsCertain: false
+    bootstrapFiles:
+        - vendor/yiisoft/yii2/Yii.php
+    paths:
+        - common/models/Apple.php
+        - common/components/HttpBasicUser.php
+        - backend/controllers/BaseController.php
+        - backend/controllers/AppleController.php
+        - backend/controllers/api
+        - console/controllers/TestController.php
+        - common/tests/unit/models/AppleTest.php

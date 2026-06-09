@@ -3,7 +3,7 @@
 namespace common\tests\unit\models;
 
 //use common\components\HttpBasicUser;// todo
-use backend\models\Apple;
+use common\models\Apple;
 use Codeception\Test\Unit;
 
 /**
@@ -15,7 +15,7 @@ use Codeception\Test\Unit;
  */
 class AppleTest extends Unit
 {
-    public function testCreateApple()
+    public function testCreateApple(): void
     {
         $apple = new Apple();
         $apple->color = 'red';
@@ -24,7 +24,7 @@ class AppleTest extends Unit
         $this->assertNotNull($apple->id);
     }
 
-    public function testCannotEatWhileOnTree()
+    public function testCannotEatWhileOnTree(): void
     {
         $apple = new Apple();
         $apple->color = 'green';
@@ -36,7 +36,7 @@ class AppleTest extends Unit
         $apple->eat(10);
     }
 
-    public function testFallAndEat()
+    public function testFallAndEat(): void
     {
         $apple = new Apple();
         $apple->color = 'yellow';
@@ -50,7 +50,7 @@ class AppleTest extends Unit
         $this->assertEquals(30.0, $apple->eaten_percent);
     }
 
-    public function testFullyEatenDeletes()
+    public function testFullyEatenDeletes(): void
     {
         $apple = new Apple();
         $apple->color = 'red';

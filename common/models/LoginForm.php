@@ -1,21 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace common\models;
 
 use Yii;
 use yii\base\Model;
 
 /**
- * Login form
+ * Login form.
  */
 class LoginForm extends Model
 {
     public $username;
+
     public $password;
+
     public $rememberMe = true;
 
     private $_user;
-
 
     /**
      * {@inheritdoc}
@@ -37,7 +40,7 @@ class LoginForm extends Model
      * This method serves as the inline validation for password.
      *
      * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
+     * @param array  $params    the additional name-value pairs given in the rule
      */
     public function validatePassword($attribute, $params)
     {
@@ -64,7 +67,7 @@ class LoginForm extends Model
     }
 
     /**
-     * Finds user by [[username]]
+     * Finds user by [[username]].
      *
      * @return User|null
      */

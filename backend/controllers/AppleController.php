@@ -1,27 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace backend\controllers;
 
-use backend\models\Apple;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use common\models\Apple;
+use DomainException;
+use InvalidArgumentException;
 use yii\filters\VerbFilter;
+use yii\log\Logger;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
-/**
- * AppleController implements the custom actions for Apple model.
- */
 class AppleController extends BaseController
 {
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
+    public function behaviors(): array
     {
         return array_merge(
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
@@ -30,99 +29,151 @@ class AppleController extends BaseController
         );
     }
 
-    /**
-     * Lists all Apple models.
-     *
-     * @return string
-     */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $apples = Apple::find()->all();
+
         return $this->render('index', compact('apples'));
     }
 
-    /**
-     * Generates a specified number of random Apple models.
-     *
-     * @param int $count Number of apples to generate (1–20)
-     * @return \yii\web\Response
-     */
-    public function actionGenerate($count = 5)
+    public function actionGenerate(int $count = 5): Response
     {
-        $count = (int)$count;
-        $count = max(1, min($count, 20)); // ограничение от 1 до 20
+        $count = max(1, min($count, 20));
 
         for ($i = 0; $i < $count; $i++) {
-            Apple::createRandom();
+            try {
+                Apple::createRandom();
+            } catch (\RuntimeException $e) {
+                $this->app()->session->setFlash('error', $e->getMessage());
+
+                break;
+            }
         }
 
         return $this->redirect(['index']);
     }
 
-    /**
-     * Makes an apple fall from the tree.
-     *
-     * @param int $id
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionFall($id)
+    public function actionFall(int $id): Response
     {
         $apple = $this->findModel($id);
+        $isAjax = $this->app()->request->isAjax;
+
         try {
             $apple->fallToGround();
-        } catch (\DomainException $e) {
-            \Yii::$app->session->setFlash('error', $e->getMessage());
+            $this->logAction('fall', $id);
+
+            if ($isAjax) {
+                $this->app()->response->format = Response::FORMAT_JSON;
+
+                return $this->asJson([
+                    'success' => true,
+                    'message' => 'Яблоко упало',
+                    'status' => $apple->getStatus(),
+                    'fell_at' => $apple->fell_at,
+                ]);
+            }
+
+            $this->app()->session->setFlash('success', 'Яблоко упало');
+        } catch (DomainException $e) {
+            if ($isAjax) {
+                $this->app()->response->format = Response::FORMAT_JSON;
+
+                return $this->asJson(['success' => false, 'message' => $e->getMessage()]);
+            }
+            $this->app()->session->setFlash('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            $this->app()->errorHandler->logException($e);
+            if ($isAjax) {
+                $this->app()->response->format = Response::FORMAT_JSON;
+
+                return $this->asJson(['success' => false, 'message' => 'Произошла ошибка при падении яблока']);
+            }
+            $this->app()->session->setFlash('error', 'Произошла ошибка при падении яблока');
         }
 
         return $this->redirect(['index']);
     }
 
-    /**
-     * Eats a given percentage of an apple.
-     *
-     * @param int $id
-     * @param float $percent
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionEat($id, $percent)
+    public function actionEat(int $id, float $percent): Response
     {
         $apple = $this->findModel($id);
+        $isAjax = $this->app()->request->isAjax;
+
         try {
-            $apple->eat((float)$percent);
-        } catch (\Exception $e) {
-            \Yii::$app->session->setFlash('error', $e->getMessage());
+            $maxPercent = 100 - $apple->eaten_percent;
+            if ($percent < 1 || $percent > $maxPercent) {
+                throw new InvalidArgumentException("Процент должен быть от 1 до {$maxPercent}");
+            }
+
+            $apple->eat($percent);
+            $this->logAction('eat', $id, ['percent' => $percent]);
+
+            if ($isAjax) {
+                $this->app()->response->format = Response::FORMAT_JSON;
+
+                return $this->asJson([
+                    'success' => true,
+                    'message' => sprintf('Съедено %.0f%% яблока', $percent),
+                    'eaten_percent' => $apple->eaten_percent,
+                    'deleted' => $apple->eaten_percent >= 100,
+                ]);
+            }
+
+            $this->app()->session->setFlash('success', sprintf('Съедено %.0f%% яблока', $percent));
+        } catch (DomainException|InvalidArgumentException $e) {
+            if ($isAjax) {
+                $this->app()->response->format = Response::FORMAT_JSON;
+
+                return $this->asJson(['success' => false, 'message' => $e->getMessage()]);
+            }
+            $this->app()->session->setFlash('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            $this->app()->errorHandler->logException($e);
+            if ($isAjax) {
+                $this->app()->response->format = Response::FORMAT_JSON;
+
+                return $this->asJson(['success' => false, 'message' => 'Произошла ошибка при поедании яблока']);
+            }
+            $this->app()->session->setFlash('error', 'Произошла ошибка при поедании яблока');
+        }
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionDelete(int $id): Response
+    {
+        try {
+            $this->findModel($id)->delete();
+            $this->app()->session->setFlash('success', 'Яблоко удалено');
+        } catch (\Throwable $e) {
+            $this->app()->session->setFlash('error', 'Не удалось удалить яблоко');
         }
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Deletes an existing Apple model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * Note: This action is kept for debugging only; normally apples delete themselves when fully eaten.
-     *
-     * @param int $id
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param array<string, mixed> $data
      */
-    public function actionDelete($id)
+    private function logAction(string $action, int $appleId, array $data = []): void
     {
-        $this->findModel($id)->delete();
-        return $this->redirect(['index']);
+        $userId = (string) ($this->app()->user->id ?? 'guest');
+        $message = sprintf(
+            'User %s performed action "%s" on apple #%d at %s. Data: %s',
+            $userId,
+            $action,
+            $appleId,
+            date('Y-m-d H:i:s'),
+            json_encode($data)
+        );
+
+        $this->app()->log->logger->log($message, Logger::LEVEL_INFO, 'apple_actions');
     }
 
-    /**
-     * Finds the Apple model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id
-     * @return Apple the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
+    protected function findModel(int $id): Apple
     {
-        if (($model = Apple::findOne(['id' => $id])) !== null) {
+        $model = Apple::findOne(['id' => $id]);
+        if ($model !== null) {
             return $model;
         }
 

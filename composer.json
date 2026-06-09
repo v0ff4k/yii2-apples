@@ -14,7 +14,7 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.4.0",
+        "php": ">=8.5.0",
         "yiisoft/yii2": "~2.0.45",
         "yiisoft/yii2-bootstrap5": "~2.0.2",
         "yiisoft/yii2-symfonymailer": "~2.0.3"
@@ -23,13 +23,16 @@
         "yiisoft/yii2-debug": "~2.1.0",
         "yiisoft/yii2-gii": "~2.2.0",
         "yiisoft/yii2-faker": "~2.0.0",
-        "phpunit/phpunit": "~9.5.0",
-        "codeception/codeception": "^5.0.0 || ^4.0",
-        "codeception/lib-innerbrowser": "^4.0 || ^3.0 || ^1.1",
-        "codeception/module-asserts": "^3.0 || ^1.1",
+        "phpunit/phpunit": "^13.0",
+        "phpstan/phpstan": "^2.2",
+        "squizlabs/php_codesniffer": "^4.0",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "codeception/codeception": "^5.3",
+        "codeception/lib-innerbrowser": "^4.0",
+        "codeception/module-asserts": "^3.0",
         "codeception/module-yii2": "^1.1",
-        "codeception/module-filesystem": "^3.0 || ^2.0 || ^1.1",
-        "codeception/verify": "^3.0 || ^2.2"
+        "codeception/module-filesystem": "^3.0",
+        "codeception/verify": "^3.0"
     },
     "autoload-dev": {
         "psr-4": {
@@ -37,6 +40,13 @@
             "backend\\tests\\": ["backend/tests/", "backend/tests/_support"],
             "frontend\\tests\\": ["frontend/tests/", "frontend/tests/_support"]
         }
+    },
+    "scripts": {
+        "migrate": "./yii migrate",
+        "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "vendor/bin/php-cs-fixer fix",
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/phpunit"
     },
     "config": {
         "allow-plugins": {

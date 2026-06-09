@@ -1,0 +1,17 @@
+.git/
+.*/
+!.env
+docker-compose.yml
+.gitignore
+.idea/
+.vscode/
+
+# inside docker there different paths !!!
+.php-cs-fixer.php
+nbproject
+*.log
+tests/
+docker/
+
+# custom test files
+/frontend/web/a.php

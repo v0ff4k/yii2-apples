@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This class only exists here for IDE (PHPStorm/Netbeans/...) autocompletion.
  * This file is never included anywhere.
@@ -9,9 +11,10 @@
  * // @property of \vendor\package\Rollbar goes here
  * class __Rollbar {
  * }
- * ```
+ * ```.
  */
-class Yii {
+class Yii
+{
     /**
      * @var \yii\web\Application|\yii\console\Application|__Application
      */
@@ -19,15 +22,17 @@ class Yii {
 }
 
 /**
- * @property yii\rbac\DbManager $authManager 
+ * @property yii\rbac\DbManager      $authManager
  * @property \yii\web\User|__WebUser $user
- * 
+ *
  */
-class __Application {
+class __Application
+{
 }
 
 /**
  * @property app\models\User $identity
  */
-class __WebUser {
+class __WebUser
+{
 }

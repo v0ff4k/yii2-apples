@@ -1,10 +1,19 @@
-# yii console commands
+# local environment
+/.env
+!/.env.example
+*local.php
+*.log
+console/runtime/cache
+console/runtime/logs
+
+
 /yii
 /yii_test
 /yii_test.bat
 
 # phpstorm project files
 .idea
+/docs/*
 
 # netbeans project files
 nbproject
@@ -38,7 +47,9 @@ phpunit.phar
 /frontend/web/index.php
 /frontend/web/index-test.php
 /frontend/web/robots.txt
+/frontend/web/a.php
 /backend/web/index.php
 /backend/web/index-test.php
 /backend/web/robots.txt
 /.phpunit.result.cache
+/.php-cs-fixer.cache

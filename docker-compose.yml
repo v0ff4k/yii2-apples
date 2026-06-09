@@ -4,35 +4,61 @@ services:
 
   frontend:
     build: frontend
+    container_name: yii-apple_frontend
+    security_opt:
+      - seccomp:unconfined
     ports:
       - 20080:80
+    environment:
+      - COMPOSER_MAX_PARALLEL_HTTP=1
+      - COMPOSER_ROOT_VERSION=1.0.0
+      - DB_HOST=mysql
+      - DB_NAME=yii2_apples
+      - DB_USER=yii2advanced
+      - DB_PASSWORD=secret
+      - DB_TEST_HOST=mysql
+      - DB_TEST_NAME=yii2_apples_test
+      - DB_TEST_USER=yii2advanced
+      - DB_TEST_PASSWORD=secret
     volumes:
-      # Re-use local composer cache via host-volume
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
       - ./:/app
+    depends_on:
+      - mysql
 
   backend:
     build: backend
+    container_name: yii-apple_backend
+    security_opt:
+      - seccomp:unconfined
+    deploy:
+      resources:
+        limits:
+          memory: 4G
     ports:
       - 21080:80
+    environment:
+      - COMPOSER_MAX_PARALLEL_HTTP=1
+      - COMPOSER_ROOT_VERSION=1.0.0
+      - DB_HOST=mysql
+      - DB_NAME=yii2_apples
+      - DB_USER=yii2advanced
+      - DB_PASSWORD=secret
+      - DB_TEST_HOST=mysql
+      - DB_TEST_NAME=yii2_apples_test
+      - DB_TEST_USER=yii2advanced
+      - DB_TEST_PASSWORD=secret
     volumes:
-      # Re-use local composer cache via host-volume
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
       - ./:/app
+    depends_on:
+      - mysql
 
   mysql:
     image: mysql:5.7
+    container_name: yii-apple_mysql
     environment:
       - MYSQL_ROOT_PASSWORD=verysecret
-      - MYSQL_DATABASE=yii2advanced
+      - MYSQL_DATABASE=yii2_apples
       - MYSQL_USER=yii2advanced
       - MYSQL_PASSWORD=secret
-
-  #pgsql:
-  #  image: postgres:9.5
-  #  environment:
-  #    - POSTGRES_DB=yii2advanced
-  #    - POSTGRES_USER=yii2advanced
-  #    - POSTGRES_PASSWORD=secret
